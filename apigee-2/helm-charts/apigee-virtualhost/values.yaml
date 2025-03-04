@@ -1,0 +1,27 @@
+# Default values for apigee-virtualhost.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+contractProvider: https://apigee.googleapis.com
+
+namespace: apigee
+
+nodeSelector:
+  requiredForScheduling: true
+  apigeeRuntime:
+    key: "cloud.google.com/gke-nodepool"
+    value: "apigee-runtime"
+  apigeeData:
+    key: "cloud.google.com/gke-nodepool"
+    value: "apigee-data"
+
+# Apigee Guardrails
+guardrails:
+  image:
+    url: "gcr.io/apigee-release/hybrid/apigee-watcher"
+    tag: "1.13.2"
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 500m
+      memory: 64Mi

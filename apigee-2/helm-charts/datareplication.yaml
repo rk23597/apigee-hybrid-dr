@@ -1,0 +1,10 @@
+apiVersion: apigee.cloud.google.com/v1alpha1
+kind: CassandraDataReplication
+metadata:
+  name: region-expansion
+  namespace: apigee
+spec:
+  organizationRef: apigee-hybrid-r-498b1a0
+  force: false
+  source:
+    region: dc-1

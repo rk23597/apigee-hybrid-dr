@@ -1,0 +1,116 @@
+instanceID: "apigee-hybrid-rakesh"
+namespace: apigee # Usually "apigee"
+
+gcp:
+  projectID: apigee-hybrid-rakesh
+  region: asia-southeast1
+
+k8sCluster:
+  name: apigee-cluster-3
+  region: asia-southeast1 # Must be the closest Google Cloud region to your cluster.
+org: apigee-hybrid-rakesh
+
+
+nodeSelector:
+  requiredForScheduling: true
+  apigeeRuntime:
+    key: "node"
+    value: "apigee-runtime"
+  apigeeData:
+    key: "node"
+    value: "apigee-data"
+
+envs:
+- name: dev-env
+  serviceAccountPaths:
+  # Provide the path relative to the chart directory.
+    synchronizer: apigee-hybrid-rakesh-apigee-non-prod.json
+      # For example: "rakesh-k-poc-apigee-non-prod.json"
+    runtime: apigee-hybrid-rakesh-apigee-non-prod.json
+      # For example: "rakesh-k-poc-apigee-non-prod.json"
+    udca: apigee-hybrid-rakesh-apigee-non-prod.json
+      # For example: "rakesh-k-poc-apigee-non-prod.json"
+
+
+cassandra:
+  #multiRegionSeedHost: "172.31.25.233"
+  datacenter: "dc-2"
+  rack: "ra-1"
+  clusterName: apigeecluster
+  hostNetwork: false
+    # Set to false for single region installations and multi-region installations
+    # with connectivity between pods in different clusters, for example GKE installations.
+    # Set to true  for multi-region installations with no communication between
+    # pods in different clusters, for example Google Distributed Cloud on VMware or bare metal, GKE on AWS,
+    # AKS, EKS, and OpenShift installations.
+    # See Multi-region deployment: Prerequisites
+  replicaCount: 3
+  storage:
+    storageClass: ebs-sc
+    storageSize: 200Gi
+      #restore:
+      # enabled: true
+      # snapshotTimestamp: "20250208054844"
+      # cloudProvider: "CSI"
+      #  image:
+      # pullPolicy: Always
+    
+        #  backup:
+        #    enabled: true
+        #    image:
+        #     pullPolicy: Always
+        #     cloudProvider: "CSI"
+        #     schedule: "35 12 * * *"
+    
+    # Use 1 for non-prod or "demo" installations and multiples of 3 for production.
+ingressGateways:
+- name: apigee-ingress # maximum 17 characters. See Known issue 243167389.
+  replicaCountMin: 2
+  replicaCountMax: 10
+  svcType: ClusterIP
+virtualhosts:
+- name: dev-group
+  selector:
+    app: apigee-ingressgateway
+    ingress_name: apigee-ingress
+  minTLSProtocolVersion: "1.2"
+  maxTLSProtocolVersion: "1.3"    
+  sslCertPath: certs/keystore_dev-group.pem
+  sslKeyPath: certs/keystore_dev-group.key
+    # additionalGateways: ["route-non-sni-test"]
+    
+
+mart:
+  serviceAccountPath: apigee-hybrid-rakesh-apigee-non-prod.json
+  # Provide the path relative to the chart directory.
+  # For example: "rakesh-k-poc-apigee-non-prod.json"
+
+connectAgent:
+  serviceAccountPath: apigee-hybrid-rakesh-apigee-non-prod.json
+  # Provide the path relative to the chart directory.
+  # Use the same service account for mart and connectAgent
+    # For example: "rakesh-k-poc-apigee-non-prod.json"
+
+logger:
+  enabled: true
+        # enabled by default
+        # See apigee-logger in Service accounts and roles used by hybrid components.
+  serviceAccountPath: apigee-hybrid-rakesh-apigee-non-prod.json
+  # Provide the path relative to the chart directory.
+  # For example: "rakesh-k-poc-apigee-non-prod.json"
+
+metrics:
+  serviceAccountPath: apigee-hybrid-rakesh-apigee-non-prod.json
+  # Provide the path relative to the chart directory.
+  # For example: "rakesh-k-poc-apigee-non-prod.json"
+
+udca:
+  serviceAccountPath: apigee-hybrid-rakesh-apigee-non-prod.json
+  # Provide the path relative to the chart directory.
+  # For example: "rakesh-k-poc-apigee-non-prod.json"
+
+watcher:
+  serviceAccountPath: apigee-hybrid-rakesh-apigee-non-prod.json
+  # Provide the path relative to the chart directory.
+  # For example: "rakesh-k-poc-apigee-non-prod.json"
+

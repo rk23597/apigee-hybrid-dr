@@ -1,0 +1,20 @@
+org: foo
+instanceID: unittest
+
+k8sCluster:
+  name: unittest
+  region: unittest-region
+
+gcp:
+  projectID: org-unit-test-id
+
+udca:
+  serviceAccountPath: test-file.txt
+mart:
+  serviceAccountPath: test-file.txt
+connectAgent:
+  serviceAccountPath: test-file.txt
+watcher:
+  serviceAccountPath: test-file.txt
+ingressGateways:
+- name: unittest0
